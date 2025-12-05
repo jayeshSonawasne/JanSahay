@@ -12,7 +12,7 @@ const options = {
         },
         servers: [
             {
-                url: "http://0.0.0.0:8585",
+                url: "https://jansahay.onrender.com",
                 description: "Local Server",
             },
         ],
