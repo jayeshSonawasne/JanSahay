@@ -199,7 +199,7 @@
  *           schema:
  *             type: object
  *             properties:
- *               file:
+ *               pdf:
  *                 type: string
  *                 format: binary
  *                 description: Single scheme file to upload
