@@ -204,7 +204,7 @@
  *                 format: binary
  *                 description: Single scheme file to upload
  *             required:
- *               - file
+ *               - pdf
  *     responses:
  *       200:
  *         description: File uploaded successfully
