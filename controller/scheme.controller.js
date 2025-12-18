@@ -5,32 +5,32 @@ const path = require('path');
 const pdf = require('pdf-parse');
 
 const getAllSchemes = async (req, res) => {
-    try {
-        // Assuming schemeModel.find() is an async operation (like MongoDB/Mongoose)
-        let allSchemes = await schemeModel.find();
+  try {
+    // Assuming schemeModel.find() is an async operation (like MongoDB/Mongoose)
+    let allSchemes = await schemeModel.find();
 
-        if (allSchemes && allSchemes.length > 0) {
-            res.status(200).send({
-                status: true,
-                data: allSchemes,
-                message: 'Schemes retrieved successfully'
-            });
-        } else {
-            res.status(404).send({
-                status: false,
-                data: [],
-                message: 'No schemes found'
-            });
-        }
-
-    } catch (error) {
-        console.error('Error fetching schemes:', error);
-        res.status(500).send({
-            status: false,
-            message: 'Internal server error',
-            error: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
+    if (allSchemes && allSchemes.length > 0) {
+      res.status(200).send({
+        status: true,
+        data: allSchemes,
+        message: 'Schemes retrieved successfully'
+      });
+    } else {
+      res.status(404).send({
+        status: false,
+        data: [],
+        message: 'No schemes found'
+      });
     }
+
+  } catch (error) {
+    console.error('Error fetching schemes:', error);
+    res.status(500).send({
+      status: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
 }
 
 const uploadScheme = async (req, res) => {
@@ -89,4 +89,142 @@ const uploadScheme = async (req, res) => {
     });
   }
 };
-module.exports = { getAllSchemes, uploadScheme };
+
+const ApplyForScheme = async (req, res) => {
+  try {
+    let { refUser, refSchemeId, userName, email, dateOfBirth, mobileNumber, gender, category, aadharNumber, panNumber, address, city, state, pincode, aadharCardLink, panCardLink, incomeCertificateLink, addressProofLink, passportSizePhotoLink, isAknowledgementSent, isApplicationSubmitted } = req.body;
+
+    let appliedScheme = new appliedSchemeSchema({
+      refUser,
+      refSchemeId,
+      userName,
+      email,
+      dateOfBirth,
+      mobileNumber,
+      gender,
+      category,
+      aadharNumber,
+      panNumber,
+      address,
+      city,
+      state,
+      pincode,
+      aadharCardLink,
+      panCardLink,
+      incomeCertificateLink,
+      addressProofLink,
+      passportSizePhotoLink,
+      isAknowledgementSent,
+      isApplicationSubmitted
+    });
+
+    let isSchemeSave = await appliedScheme.save();
+    if (isSchemeSave) {
+      return res.status(200).send({
+        status: true,
+        message: 'Scheme applied successfully',
+        data: isSchemeSave
+      });
+    } else {
+      return res.status(400).send({
+        status: false,
+        message: 'Scheme applied failed',
+        data: appliedScheme
+      });
+    }
+
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+}
+
+const checkEligibility = async (req, res) => {
+  try {
+    const { age, gender, income, occupation, state } = req.body;
+
+    const eligibleSchemes = await schemeSchema.find({
+      age: { $regex: age, $options: 'i' },
+      gender: { $regex: gender, $options: 'i' },
+      income: { $regex: income, $options: 'i' },
+      occupation: { $regex: occupation, $options: 'i' },
+      state: { $regex: state, $options: 'i' }
+    });
+
+    if (eligibleSchemes && eligibleSchemes.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: 'Eligible schemes found',
+        data: eligibleSchemes
+      });
+    } else {
+      return res.status(404).send({
+        status: false,
+        message: 'No eligible schemes found for the provided criteria',
+        data: []
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+const savedSchemes = async (req, res) => {
+  try {
+    let refUser = req.query.refUser;
+    const savedSchemes = await schemeSchema.find({ refUser: refUser });
+    if (savedSchemes && savedSchemes.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: 'Saved schemes found',
+        data: savedSchemes
+      });
+    } else {
+      return res.status(404).send({
+        status: false,
+        message: 'No saved schemes found',
+        data: []
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: 'Internal server error',
+      data: []
+    });
+  }
+};
+
+const getAllAppliedScheme = async (req, res) => {
+  try {
+    let refUser = req.query.refUser;
+    const allAppliedScheme = await appliedSchemeSchema.find({ refUser: refUser });
+    if (allAppliedScheme && allAppliedScheme.length > 0) {
+      return res.status(200).send({
+        status: true,
+        message: 'All applied schemes found',
+        data: allAppliedScheme
+      });
+    } else {
+      return res.status(404).send({
+        status: false,
+        message: 'No applied schemes found',
+        data: []
+      });
+    }
+  } catch (error) {
+    return res.status(500).send({
+      status: false,
+      message: 'Internal server error',
+      data: []
+    });
+  }
+};
+module.exports = { getAllSchemes, uploadScheme, ApplyForScheme, checkEligibility, savedSchemes, getAllAppliedScheme };

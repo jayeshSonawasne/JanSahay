@@ -45,6 +45,29 @@
  *         description: Server error
  */
 
+/**
+ * @swagger
+ * /chat/chatHistory:
+ *   get:
+ *     summary: Get JanSahay response based on user prompt
+ *     description: pass refUser as query parameter to get chat history.
+ *     tags: [JanSahay AI Model Chat]
+ *     parameters:
+ *       - in: query
+ *         name: refUser
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The text query to process
+ *     responses:
+ *       200:
+ *         description: Successful response from JanSahay
+ *       400:
+ *         description: Missing or invalid prompt
+ *       500:
+ *         description: Server error
+ */
+
 
 /**
  * @swagger
@@ -186,6 +209,174 @@
 
 /**
  * @swagger
+ * /scheme/getAllAppliedScheme:
+ *   get:
+ *     summary: Fetch all applied schemes
+ *     tags: [Scheme]
+ *     parameters:
+ *       - in: query
+ *         name: refUser
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: refUser
+ *     responses:
+ *       200:
+ *         description: Schemes fetched successfully
+ *       404:
+ *         description: No schemes found
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /scheme/savedSchemes:
+ *   get:
+ *     summary: Fetch all schemes
+ *     tags: [Scheme]
+ *     parameters:
+ *       - in: query
+ *         name: refUser
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The text query to process
+ *     responses:
+ *       200:
+ *         description: Schemes fetched successfully
+ *       404:
+ *         description: No schemes found
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /scheme/applyForScheme:
+ *   post:
+ *     summary: Apply for scheme
+ *     tags: [Scheme]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               refUser:
+ *                 type: string
+ *                 example: "id"
+ *               refSchemeId:
+ *                 type: string
+ *                 example: "id"
+ *               userName:
+ *                 type: string
+ *                 example: "John Doe"
+ *               email:
+ *                 type: string
+ *                 example: "john@gmail.com"
+ *               dateOfBirth:
+ *                 type: string
+ *                 example: "2025-12-18"
+ *               mobileNumber:
+ *                 type: string
+ *                 example: "1234567890"
+ *               gender:
+ *                 type: string
+ *                 example: "Male"
+ *               category:
+ *                 type: string
+ *                 example: "General"
+ *               aadharNumber:
+ *                 type: string
+ *                 example: "123456789012"
+ *               panNumber:
+ *                 type: string
+ *                 example: "ABCD1234"
+ *               address:
+ *                 type: string
+ *                 example: "123 Main St, City, State"
+ *               city:
+ *                 type: string
+ *                 example: "City"
+ *               state:
+ *                 type: string
+ *                 example: "State"
+ *               pincode:
+ *                 type: string
+ *                 example: "123456"
+ *               aadharCardLink:
+ *                 type: string
+ *                 example: "https://example.com/aadhar-card.jpg"
+ *               panCardLink:
+ *                 type: string
+ *                 example: "https://example.com/pan-card.jpg"
+ *               incomeCertificateLink:
+ *                 type: string
+ *                 example: "https://example.com/income-certificate.jpg"
+ *               addressProofLink:
+ *                 type: string
+ *                 example: "https://example.com/address-proof.jpg"
+ *               passportSizePhotoLink:
+ *                 type: string
+ *                 example: "https://example.com/passport-size-photo.jpg"
+ *               isAknowledgementSent:
+ *                 type: string
+ *                 example: "true"
+ *               isApplicationSubmitted:
+ *                 type: string
+ *                 example: "true"
+ *             required:
+ *     responses:
+ *       200:
+ *         description: User inserted successfully
+ *       500:
+ *         description: Server error
+ */
+
+
+/**
+ * @swagger
+ * /scheme/checkEligibility:
+ *   post:
+ *     summary: Check eligibility for scheme
+ *     tags: [Scheme]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               age:
+ *                 type: string
+ *                 example: "25"
+ *               gender:
+ *                 type: string
+ *                 example: "Male"
+ *               income:
+ *                 type: string
+ *                 example: "25000"
+ *               occupation:
+ *                 type: string
+ *                 example: "Student"
+ *               state:
+ *                 type: string
+ *                 example: "Maharashtra"
+ *             required:
+ *     responses:
+ *       200:
+ *         description: Eligible schemes found
+ *       404:
+ *         description: No eligible schemes found
+ *       500:
+ *         description: Server error
+ */
+
+
+/**
+ * @swagger
  * /scheme/uploadScheme:
  *   post:
  *     summary: Upload Scheme File
@@ -210,4 +401,37 @@
  *         description: File uploaded successfully
  *       500:
  *         description: Upload failed
+ */
+
+/**
+ * @swagger
+ * /application/trackApplication:
+ *   get:
+ *     summary: Track Application
+ *     tags: [Application]
+ *     parameters:
+ *       - in: query
+ *         name: refUser
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: refUser
+ *     responses:
+ *       200:
+ *         description: Application Tracked Successfully
+ *       500:
+ *         description: Application Tracked Failed
+ */
+
+/**
+ * @swagger
+ * /application/trackAllApplication:
+ *   get:
+ *     summary: Track All Application
+ *     tags: [Application]
+ *     responses:
+ *       200:
+ *         description: Application Tracked Successfully
+ *       500:
+ *         description: Application Tracked Failed
  */

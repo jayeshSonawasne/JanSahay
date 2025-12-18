@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-const chatWithJanSahay = require('../controller/jansahay.controller');
+const chatController = require('../controller/jansahay.controller');
 
-router.get('/jansahay', chatWithJanSahay);
+router.get('/jansahay', chatController.chatWithJanSahay);
+
+router.get('/chatHistory', chatController.chatHistory);
 
 module.exports = router;
