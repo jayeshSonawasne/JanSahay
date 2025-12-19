@@ -6,7 +6,7 @@ const app = express(); // Remove 'new' keyword
 const AI = require('./routes/aichat.routes');
 const cors = require('cors');
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 8585;
 
 // const schemeModel = require('./models/scheme.model');
 
@@ -18,8 +18,8 @@ const application = require('./routes/application.track.route');
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: "*",
-  methods: ["GET", "PUT" , "POST", "DELET"]
+    origin: "*",
+    methods: ["GET", "PUT", "POST", "DELET"]
 }));
 
 
@@ -54,10 +54,46 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // app.use('/uploadScheme')
 
-app.listen(PORT,'0.0.0.0',(err) => {
+const server = app.listen(PORT, '0.0.0.0', (err) => {
     if (err) {
         console.log('Something went wrong:', err);
     } else {
         console.log(`🚀 Server running on port ${PORT}`);
     }
+});
+
+// Initialize Socket.io
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
+io.on('connection', (socket) => {
+    console.log('User connected:', socket.id);
+
+    socket.on('join-room', (roomId, userId) => {
+        console.log(`User ${userId} joined room ${roomId}`);
+        socket.join(roomId);
+        socket.to(roomId).emit('user-connected', userId);
+
+        socket.on('disconnect', () => {
+            console.log(`User ${userId} disconnected from room ${roomId}`);
+            socket.to(roomId).emit('user-disconnected', userId);
+        });
+    });
+
+    // WebRTC Signaling Events
+    socket.on('offer', (data) => {
+        socket.to(data.roomId).emit('offer', data.offer);
+    });
+
+    socket.on('answer', (data) => {
+        socket.to(data.roomId).emit('answer', data.answer);
+    });
+
+    socket.on('ice-candidate', (data) => {
+        socket.to(data.roomId).emit('ice-candidate', data.candidate);
+    });
 });
