@@ -84,6 +84,22 @@ io.on('connection', (socket) => {
         });
     });
 
+    socket.on('leave-room', (roomId, userId) => {
+        console.log(`User ${userId} left room ${roomId}`);
+        socket.leave(roomId);
+        socket.to(roomId).emit('user-disconnected', userId);
+    });
+
+    // Notify user of incoming call
+    socket.on('call-user', (data) => {
+        // Broadcast to all connected clients (except sender) for global notification
+        socket.broadcast.emit('incoming-call', { from: data.from, roomId: data.roomId });
+    });
+
+    socket.on('answer-call', (data) => {
+        socket.to(data.roomId).emit('call-accepted', data);
+    });
+
     // WebRTC Signaling Events
     socket.on('offer', (data) => {
         socket.to(data.roomId).emit('offer', data.offer);
